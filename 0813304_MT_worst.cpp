@@ -14,7 +14,7 @@ vector<int> num;
 //vector<int> numSorted;
 int listSize;
 int subSize;
-int subSizeArr[8];
+int subSizeArr[4];
 int bubbleArg=0;
 
 struct mArg{
@@ -31,14 +31,14 @@ int main(){
 	}
 	
 	listSize = num.size();
-	subSize = listSize / 8;
-	for(int i=0; i<8-1; ++i){
+	subSize = listSize / 4;
+	for(int i=0; i<4-1; ++i){
 		subSizeArr[i] = subSize;
 	}
-	subSizeArr[7] = listSize - 7*(subSize);
+	subSizeArr[3] = listSize - 3*(subSize);
 
 	//create thread to bubble sort
-	pthread_t t1_s, t2_s, t3_s, t4_s, t5_s, t6_s, t7_s, t8_s;
+	pthread_t t1_s, t2_s, t3_s, t4_s;
 	int bubbleArg1 = 0;
 	pthread_create(&t1_s, NULL, bubble_sort,(void*)&bubbleArg1);
 	int bubbleArg2 = 1;
@@ -47,22 +47,10 @@ int main(){
 	pthread_create(&t3_s, NULL, bubble_sort,(void*)&bubbleArg3);
 	int bubbleArg4 = 3;
 	pthread_create(&t4_s, NULL, bubble_sort,(void*)&bubbleArg4);
-	int bubbleArg5 = 4;
-	pthread_create(&t5_s, NULL, bubble_sort,(void*)&bubbleArg5);
-	int bubbleArg6 = 5;
-	pthread_create(&t6_s, NULL, bubble_sort,(void*)&bubbleArg6);
-	int bubbleArg7 = 6;
-	pthread_create(&t7_s, NULL, bubble_sort,(void*)&bubbleArg7);
-	int bubbleArg8 = 7;
-	pthread_create(&t8_s, NULL, bubble_sort,(void*)&bubbleArg8);
     pthread_join(t1_s, NULL);
     pthread_join(t2_s, NULL);
 	pthread_join(t3_s, NULL);
 	pthread_join(t4_s, NULL);
-	pthread_join(t5_s, NULL);
-	pthread_join(t6_s, NULL);
-	pthread_join(t7_s, NULL);
-	pthread_join(t8_s, NULL);
 	
 //	cout<<"bubble sort:"<<endl;
 //	for(int i=0; i<num.size(); ++i){
@@ -72,40 +60,19 @@ int main(){
 //	cout<<endl;
 	
 	//create thread to merge subarrays
-	mArg mergeArg_layer1[4]={
+	mArg mergeArg_layer1[2]={
 		{subSizeArr[0], subSizeArr[1] , 0*subSize},
-		{subSizeArr[2], subSizeArr[3] , 2*subSize},
-		{subSizeArr[4], subSizeArr[5] , 4*subSize},
-		{subSizeArr[6], subSizeArr[7] , 6*subSize}
+		{subSizeArr[2], subSizeArr[3] , 2*subSize}
 	};
-	mArg mergeArg_layer2[2]={
-		{subSizeArr[0]+subSizeArr[1], subSizeArr[2]+subSizeArr[3] , 0*subSize},
-		{subSizeArr[4]+subSizeArr[5], subSizeArr[6]+subSizeArr[7] , 4*subSize}
-	};
-	mArg mergeArg_layer3={
-		subSizeArr[0]+subSizeArr[1]+subSizeArr[2]+subSizeArr[3], subSizeArr[4]+subSizeArr[5]+subSizeArr[6]+subSizeArr[7], 0*subSize
-	};
+	mArg mergeArg_layer2={ subSizeArr[0]+subSizeArr[1], subSizeArr[2]+subSizeArr[3] , 0*subSize	};
 	
-	pthread_t t1_m, t2_m, t3_m, t4_m,
-			  T1_m, T2_m, T_m;
-//	int res;
+	pthread_t t1_m, t2_m, T_m;
 	pthread_create(&t1_m, NULL, merge,(void*)&mergeArg_layer1[0]);
 	pthread_create(&t2_m, NULL, merge,(void*)&mergeArg_layer1[1]);
-	pthread_create(&t3_m, NULL, merge,(void*)&mergeArg_layer1[2]);
-	pthread_create(&t4_m, NULL, merge,(void*)&mergeArg_layer1[3]);
-//	if(res!=0) cout<<"create error!"<<endl;
 	pthread_join(t1_m, NULL);
-//	if(res!=0) cout<<"wait error!"<<endl;
 	pthread_join(t2_m, NULL);
-	pthread_join(t3_m, NULL);
-	pthread_join(t4_m, NULL);
-	
-	pthread_create(&T1_m, NULL, merge,(void*)&mergeArg_layer2[0]);
-	pthread_create(&T2_m, NULL, merge,(void*)&mergeArg_layer2[1]);
-	pthread_join(T1_m, NULL);
-	pthread_join(T2_m, NULL);
 
-	pthread_create(&T_m, NULL, merge,(void*)&mergeArg_layer3);
+	pthread_create(&T_m, NULL, merge,(void*)&mergeArg_layer2);
 	pthread_join(T_m, NULL);
 	
 //	cout<<"merging result:"<<endl;

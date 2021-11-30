@@ -4,7 +4,7 @@
 #include <cmath>
 #include <pthread.h>
 #define BOUND 2147483647
-#define N 16
+#define N 8
 using namespace std;
 
 void *bubble_sort(void*);

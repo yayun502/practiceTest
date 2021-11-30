@@ -21,27 +21,23 @@ vector<int> num;
 //vector<int> numSorted;
 int listSize;
 int subSize;
-int subSizeArr[8];
+int subSizeArr[4];
 int bubbleArg;
-mArg mergeArg[7];
+mArg mergeArg[3];
 
 int main(){
 	
 	int input;
-	//for(int i=0; i<25; ++i){
-	//	cin>>input;
-	//	num.push_back(input);
-	//}
 	while(cin>>input){
 		num.push_back(input);
 	}
 	
 	listSize = num.size();
-	subSize = listSize / 8;
-	for(int i=0; i<8-1; ++i){
+	subSize = listSize / 4;
+	for(int i=0; i<4-1; ++i){
 		subSizeArr[i] = subSize;
 	}
-	subSizeArr[7] = listSize - 7*(subSize);
+	subSizeArr[3] = listSize - 3*(subSize);
 	
 	
 	bubbleArg = 0;
@@ -66,61 +62,11 @@ int main(){
 	mergeArg[1].nRight=subSizeArr[3];
 	mergeArg[1].startIndex= 2*subSize;
 	
-	mergeArg[2].nLeft=subSizeArr[4];
-	mergeArg[2].nRight=subSizeArr[5];
-	mergeArg[2].startIndex= 4*subSize;
+	mergeArg[2].nLeft=subSizeArr[0]+subSizeArr[1];
+	mergeArg[2].nRight=subSizeArr[2]+subSizeArr[3];
+	mergeArg[2].startIndex= 0*subSize;
 	
-	mergeArg[3].nLeft=subSizeArr[6];
-	mergeArg[3].nRight=subSizeArr[7];
-	mergeArg[3].startIndex= 6*subSize;
-	
-	mergeArg[4].nLeft=subSizeArr[8];
-    mergeArg[4].nRight=subSizeArr[9];
-    mergeArg[4].startIndex= 8*subSize;
-
-    mergeArg[5].nLeft=subSizeArr[10];
-    mergeArg[5].nRight=subSizeArr[11];
-    mergeArg[5].startIndex= 10*subSize;
-
-    mergeArg[6].nLeft=subSizeArr[12];
-    mergeArg[6].nRight=subSizeArr[13];
-    mergeArg[6].startIndex= 12*subSize;
-
-    mergeArg[7].nLeft=subSizeArr[14];
-    mergeArg[7].nRight=subSizeArr[15];
-    mergeArg[7].startIndex= 7*subSize;
-
-	
-	mergeArg[8].nLeft=subSizeArr[0]+subSizeArr[1];
-	mergeArg[8].nRight=subSizeArr[2]+subSizeArr[3];
-	mergeArg[8].startIndex= 0*subSize;
-	
-	mergeArg[9].nLeft=subSizeArr[4]+subSizeArr[5];
-	mergeArg[9].nRight=subSizeArr[6]+subSizeArr[7];
-	mergeArg[9].startIndex= 4*subSize;
-	
-	mergeArg[10].nLeft=subSizeArr[8]+subSizeArr[9];
-    mergeArg[10].nRight=subSizeArr[10]+subSizeArr[11];
-    mergeArg[10].startIndex= 8*subSize;
-
-    mergeArg[11].nLeft=subSizeArr[12]+subSizeArr[13];
-    mergeArg[11].nRight=subSizeArr[14]+subSizeArr[15];
-    mergeArg[11].startIndex= 12*subSize;
-
-	
-	mergeArg[12].nLeft=subSizeArr[0]+subSizeArr[1]+subSizeArr[2]+subSizeArr[3];
-	mergeArg[12].nRight=subSizeArr[4]+subSizeArr[5]+subSizeArr[6]+subSizeArr[7];
-	mergeArg[12].startIndex= 0*subSize;
-	
-	mergeArg[13].nLeft=subSizeArr[8]+subSizeArr[9]+subSizeArr[10]+subSizeArr[11];
-    mergeArg[13].nRight=subSizeArr[12]+subSizeArr[13]+subSizeArr[14]+subSizeArr[15];
-    mergeArg[13].startIndex= 8*subSize;
-    
-    mergeArg[14].nLeft=subSizeArr[0]+subSizeArr[1]+subSizeArr[2]+subSizeArr[3]+subSizeArr[4]+subSizeArr[5]+subSizeArr[6]+subSizeArr[7];
-    mergeArg[14].nRight=subSizeArr[8]+subSizeArr[9]+subSizeArr[10]+subSizeArr[11]+subSizeArr[12]+subSizeArr[13]+subSizeArr[14]+subSizeArr[15];
-    mergeArg[14].startIndex= 0*subSize;
-
-	
+		
 	pthread_t t1_m;
 	pthread_create(&t1_m, NULL, merge,(void*)&mergeArg[0]);
 	pthread_join(t1_m, NULL);
@@ -136,7 +82,7 @@ int main(){
 
 void *bubble_sort(void* arg){
 	
-	for(int k=0; k<8; ++k){
+	for(int k=0; k<4; ++k){
 		int start = k * subSize;
 		for(int i=0; i<subSizeArr[k]-1; ++i){
 			for(int j=0; j<subSizeArr[k]-1-i; ++j){
@@ -156,7 +102,7 @@ void *merge(void* a){
 	mArg* arg = (mArg*) a;
 	int count = 0;
 	
-	while(count<15){
+	while(count<3){
 		merge(arg->nLeft, arg->nRight, arg->startIndex);
 		++count;
 		arg = &mergeArg[count];
